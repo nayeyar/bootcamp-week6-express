@@ -18,20 +18,34 @@ describe("User routes", () => {
         User.create.mockResolvedValue({
             'username': 'testNay',
             'email': 'nay@test.com',
-            'password': '093g34n'
+            'password': '093g34n!G'
         });
         const response = await request(app).post('/users').send({
             'username': 'testNay',
             'email': 'nay@test.com',
-            'password': '093g34n'
+            'password': '093g34n!G'
         });
         expect(response.statusCode).toBe(200);
-        console.log(response.text);
+        // console.log(response.text);
+       
         expect(response.text).toBe('testNay');
         expect(User.create).toHaveBeenCalledWith({
             'username': 'testNay',
             'email': 'nay@test.com',
-            'password': '093g34n'
+            'password': '093g34n!G'
         });
     })
+
+    it("should return an error message if password isn't strong", async () => {
+        const response = await request(app)
+        .post('/users')
+        .send({"username": "Oogabooga", "email": "oogabooga@email.com", "password": "testpwd"});
+        
+        expect(response.status).toBe(500);
+        expect(response.text).toContain(
+            "Password must contain at least one uppercase character and one special character."
+        );
+    })
+
+
 })

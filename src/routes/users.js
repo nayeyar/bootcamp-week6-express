@@ -2,6 +2,7 @@ const { Router } = require('express');
 const router = Router();
 // const express = require('express');
 // const router = express.Router();
+const checkPasswordStrength = require('../middleware/index');
 
 const User = require('../models/User');
 
@@ -10,7 +11,7 @@ router.get('/', async (req, res) => {
     res.json(users);
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', checkPasswordStrength, async (req, res, next) => {
     try {
         const user = await User.create(req.body);
         res.send(user.username);
